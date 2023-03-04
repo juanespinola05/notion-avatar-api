@@ -1,0 +1,17 @@
+{
+  "tasks": {
+    "start": "deno run -A --watch=static/,src/ src/server.ts"
+  },
+  "fmt": {
+    "options": {
+      "singleQuote": true,
+      "indentWidth": 2,
+      "semiColons": false
+    }
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-empty-interface"]
+    }
+  }
+}
