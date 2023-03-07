@@ -1,9 +1,10 @@
 import { Image } from 'https://deno.land/x/imagescript@1.2.15/mod.ts'
 import SVG from './components.ts'
 
+type AvatarFormat = 'png' | 'jpg'
 interface AvatarParams {
   size: string
-  format: 'png' | 'jpg'
+  format: AvatarFormat
   svgList: string[]
 }
 
@@ -23,8 +24,12 @@ export default async function generateAvatar(
 ) {
   const imageSize = SizeProps[size as keyof typeof SizeProps]
   const image = new Image(imageSize.size, imageSize.size)
-  if (format === 'jpg') {
-    image.fill(0xffffffff)
+  const backgroundImage = new Image(imageSize.size, imageSize.size)
+
+  const isPng = format === 'png'
+
+  if (!isPng) {
+    backgroundImage.fill(0xffffffff)
   }
 
   svgList.forEach((svg) => {
@@ -39,13 +44,16 @@ export default async function generateAvatar(
   if (svgList.some((svg) => svg === 'background')) {
     image.cropCircle(true, 0)
   }
-  const jpegBytes = format === 'png'
-    ? await image.encode()
-    : await image.encodeJPEG()
+
+  backgroundImage.composite(image, 0, 0)
+
+  const jpegBytes = isPng
+    ? await backgroundImage.encode()
+    : await backgroundImage.encodeJPEG()
 
   return new Response(jpegBytes, {
     headers: {
-      'Content-Type': 'image/png',
+      'Content-Type': `image/${format}`,
       'Access-Control-Allow-Origin': '*',
     },
   })
