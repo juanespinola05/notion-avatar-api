@@ -1,7 +1,7 @@
 {
   "tasks": {
     "start": "deno run -A --watch=static/,src/ src/server.ts",
-    "generate-svg": "deno run -A ./scripts/generateSVGDictionary.ts --options-single-quote=true --options-no-semicolons=true"
+    "generate-svg": "deno run -A ./scripts/generateSVGDictionary.ts && deno fmt . --options-single-quote=true --options-no-semicolons=true"
   },
   "fmt": {
     "options": {
